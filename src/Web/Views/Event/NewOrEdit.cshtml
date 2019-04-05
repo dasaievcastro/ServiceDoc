@@ -1,0 +1,65 @@
+﻿@model Domain.Event.EventDto;
+
+
+<div id="pad-wrapper">
+
+    <div class="row">
+        <div class="col-md-12">
+            <a href="/Event" class="btn">Back</a>
+        </div>
+    </div>
+    <div class="row header">
+        <div class="col-md-1">
+            <h3>Events</h3>
+        </div>
+    </div>
+    <div class="row form-wrapper">
+        <div class="col-md-12">
+            <form id="form" class="form-horizontal" asp-action="Save" asp-controller="Event" asp-anti-forgery
+                  data-ajax="true" data-ajax-method="POST" data-ajax-failure="formErro" data-ajax-success="window.location = '/Event'">
+                <input type="hidden" class="form-control" asp-for="Id">
+                <div class="form-group">
+                    <label class="col-md-2 control-label">Name</label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" asp-for="Name">
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">Description</label>
+                    <div class="col-md-8">
+                        <textarea type="text" class="form-control" asp-for="Description"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">Start Date</label>
+                    <div class="col-md-2">
+                        <input type="date" class="form-control" asp-for="StartDate">
+                        <span asp-validation-for="StartDate" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label">Finish Date</label>
+                    <div class="col-md-2">
+                        <input type="date" class="form-control" asp-for="FinishDate">
+                        <span asp-validation-for="FinishDate" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-8">
+                        <button class="btn btn-success">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="/js/jquery.validate.min.js"></script>
+    <script src="/js/jquery.validate.unobtrusive.js"></script>
+    <script src="/js/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="/js/excecaoDeDominio.js"></script>
+}
