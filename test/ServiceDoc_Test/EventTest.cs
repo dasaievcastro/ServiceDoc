@@ -1,21 +1,38 @@
 using System;
 using ExpectedObjects;
+using FluentValidation;
+using FluentValidation.TestHelper;
 using Xunit;
 
 namespace ServiceDoc_Test
 {
     public class EventTest
     {
+        public string _Name { get; set; }
+        public string _Description { get; set; }
+        public DateTime _StartDate { get; set; }
+        public DateTime _FinishDate { get; set; }
+        public EventValidator validator { get; set; }
+
+        public EventTest()
+        {
+
+            _Name = "Event name Test";
+            _Description = "Event description";
+            _StartDate = new DateTime();
+            _FinishDate = new DateTime();
+            validator = new EventValidator();
+        }
         [Fact]
         public void Should_have_create_an_event()
         {
 
             var EventTest = new
             {
-                Name = "Event name Test",
-                Description = "Event description",
-                StartDate = new DateTime(),
-                FinishDate = new DateTime()
+                Name = _Name,
+                Description = _Description,
+                StartDate = _StartDate,
+                FinishDate = _FinishDate
 
             };
             
@@ -28,6 +45,18 @@ namespace ServiceDoc_Test
                 .Builder();
 
             EventTest.ToExpectedObject().ShouldMatch(EventBuilderObject);
+        }
+
+        [Fact]
+        public void Should_have_error_when_Name_is_null_or_its_length_is_less_than_3()
+        {
+            var InvalidName = string.Empty;
+            Event EventBuilderObject = EventBuilder
+                            .Create()
+                            .HasName(InvalidName)
+                            .Builder();
+            validator.ShouldHaveValidationErrorFor(e => e.Name, EventBuilderObject);
+
         }
     }
 
@@ -92,4 +121,16 @@ public class EventBuilder
     {
         return new Event(_name, _description, _startDate, _finishDate);
     }
+}
+
+public class EventValidator : AbstractValidator<Event>
+{
+
+    public EventValidator()
+    {
+        RuleFor(e => e.Name).Cascade(CascadeMode.Continue)
+            .NotNull().NotEmpty().Length(3, 100)
+            .WithMessage("Please enter a valid name");
+    }
+
 }
