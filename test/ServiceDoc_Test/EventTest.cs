@@ -82,6 +82,33 @@ namespace ServiceDoc_Test
             validator.ShouldHaveValidationErrorFor(e => e.StartDate, EventBuilderObject);
 
         }
+
+
+        [Fact]
+        public void Should_have_error_when_FinishDate_is_null_or_invalid()
+        {
+            var InvalidDate = "2019/02/31";
+            Event EventBuilderObject = EventBuilder
+                            .Create()
+                            .HasFinishDate(InvalidDate)
+                            .Builder();
+            validator.ShouldHaveValidationErrorFor(e => e.FinishDate, EventBuilderObject);
+
+        }
+
+        [Fact]
+        public void Should_have_error_when_FinishDate_is_less_than_startDate()
+        {
+            var finishDate = "2019/02/19";
+            var startDate = "2019/02/20";
+            Event EventBuilderObject = EventBuilder
+                            .Create()
+                            .HasFinishDate(finishDate)
+                            .HasStartDate(startDate)
+                            .Builder();
+            validator.ShouldHaveValidationErrorFor(e => e.FinishDate, EventBuilderObject);
+
+        }
     }
 
 
@@ -164,6 +191,12 @@ public class EventValidator : AbstractValidator<Event>
             .NotNull()
             .Must(validateDate)
             .WithMessage("Please enter a valid Start Date");
+
+        RuleFor(e => e.FinishDate).Cascade(CascadeMode.Continue)
+            .NotNull()
+            .Must(validateDate)
+            .GreaterThan(e => e.StartDate)
+            .WithMessage("Please enter a valid Finish Date");
 
     }
 
