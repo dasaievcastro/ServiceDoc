@@ -10,8 +10,8 @@ namespace ServiceDoc_Test
     {
         public string _Name { get; set; }
         public string _Description { get; set; }
-        public DateTime _StartDate { get; set; }
-        public DateTime _FinishDate { get; set; }
+        public string _StartDate { get; set; }
+        public string _FinishDate { get; set; }
         public EventValidator validator { get; set; }
 
         public EventTest()
@@ -19,8 +19,8 @@ namespace ServiceDoc_Test
 
             _Name = "Event name Test";
             _Description = "Event description";
-            _StartDate = new DateTime();
-            _FinishDate = new DateTime();
+            _StartDate = "2019/03/07";
+            _FinishDate = "2019/03/07";
             validator = new EventValidator();
         }
         [Fact]
@@ -58,6 +58,30 @@ namespace ServiceDoc_Test
             validator.ShouldHaveValidationErrorFor(e => e.Name, EventBuilderObject);
 
         }
+
+        [Fact]
+        public void Should_have_error_when_Description_is_null_or_its_length_is_less_than_3()
+        {
+            var InvalidDescription = string.Empty;
+            Event EventBuilderObject = EventBuilder
+                            .Create()
+                            .HasDescription(InvalidDescription)
+                            .Builder();
+            validator.ShouldHaveValidationErrorFor(e => e.Description, EventBuilderObject);
+
+        }
+
+        [Fact]
+        public void Should_have_error_when_StartDate_is_null_or_invalid()
+        {
+            var InvalidDate = "2019/02/31";
+            Event EventBuilderObject = EventBuilder
+                            .Create()
+                            .HasStartDate(InvalidDate)
+                            .Builder();
+            validator.ShouldHaveValidationErrorFor(e => e.StartDate, EventBuilderObject);
+
+        }
     }
 
 
@@ -67,10 +91,10 @@ public class Event
 {
     public string Name { get; set; }
     public string Description { get; set; }
-    public DateTime StartDate { get; set; }
-    public DateTime FinishDate { get; set; }
+    public string StartDate { get; set; }
+    public string FinishDate { get; set; }
 
-    public Event(string _name, string _description, DateTime _startDate, DateTime _finishDate)
+    public Event(string _name, string _description, string _startDate, string _finishDate)
     {
         this.Name = _name;
         this.Description = _description;
@@ -85,8 +109,8 @@ public class EventBuilder
 
     public string _name { get; set; }
     public string _description { get; set; }
-    public DateTime _startDate { get; set; }
-    public DateTime _finishDate { get; set; }
+    public string _startDate { get; set; }
+    public string _finishDate { get; set; }
 
     public static EventBuilder Create()
     {
@@ -105,13 +129,13 @@ public class EventBuilder
         return this;
     }
 
-    public EventBuilder HasStartDate(DateTime _startDate)
+    public EventBuilder HasStartDate(string _startDate)
     {
         this._startDate = _startDate;
         return this;
     }
 
-    public EventBuilder HasFinishDate(DateTime _finishDate)
+    public EventBuilder HasFinishDate(string _finishDate)
     {
         this._finishDate = _finishDate;
         return this;
@@ -131,6 +155,22 @@ public class EventValidator : AbstractValidator<Event>
         RuleFor(e => e.Name).Cascade(CascadeMode.Continue)
             .NotNull().NotEmpty().Length(3, 100)
             .WithMessage("Please enter a valid name");
+
+        RuleFor(e => e.Description).Cascade(CascadeMode.Continue)
+            .NotNull().NotEmpty().Length(3, 300)
+            .WithMessage("Please enter a valid Description");
+
+        RuleFor(e => e.StartDate).Cascade(CascadeMode.Continue)
+            .NotNull()
+            .Must(validateDate)
+            .WithMessage("Please enter a valid Start Date");
+
+    }
+
+    public bool validateDate(string date)
+    {
+        DateTime vDate;
+        return DateTime.TryParse(date, out vDate);
     }
 
 }
