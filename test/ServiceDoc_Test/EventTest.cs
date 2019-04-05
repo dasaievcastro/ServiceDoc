@@ -1,4 +1,5 @@
 using System;
+using Domain.Event;
 using ExpectedObjects;
 using FluentValidation;
 using FluentValidation.TestHelper;
@@ -110,100 +111,4 @@ namespace ServiceDoc_Test
 
         }
     }
-
-
-}
-
-public class Event
-{
-    public string Name { get; set; }
-    public string Description { get; set; }
-    public string StartDate { get; set; }
-    public string FinishDate { get; set; }
-
-    public Event(string _name, string _description, string _startDate, string _finishDate)
-    {
-        this.Name = _name;
-        this.Description = _description;
-        this.StartDate = _startDate;
-        this.FinishDate = _finishDate;
-
-    }
-}
-
-public class EventBuilder
-{
-
-    public string _name { get; set; }
-    public string _description { get; set; }
-    public string _startDate { get; set; }
-    public string _finishDate { get; set; }
-
-    public static EventBuilder Create()
-    {
-        return new EventBuilder();
-    }
-
-    public EventBuilder HasName(string _name)
-    {
-        this._name = _name;
-        return this;
-    }
-
-    public EventBuilder HasDescription(string _description)
-    {
-        this._description = _description;
-        return this;
-    }
-
-    public EventBuilder HasStartDate(string _startDate)
-    {
-        this._startDate = _startDate;
-        return this;
-    }
-
-    public EventBuilder HasFinishDate(string _finishDate)
-    {
-        this._finishDate = _finishDate;
-        return this;
-    }
-
-    public Event Builder()
-    {
-        return new Event(_name, _description, _startDate, _finishDate);
-    }
-}
-
-public class EventValidator : AbstractValidator<Event>
-{
-
-    public EventValidator()
-    {
-        RuleFor(e => e.Name).Cascade(CascadeMode.Continue)
-            .NotNull().NotEmpty().Length(3, 100)
-            .WithMessage("Please enter a valid name");
-
-        RuleFor(e => e.Description).Cascade(CascadeMode.Continue)
-            .NotNull().NotEmpty().Length(3, 300)
-            .WithMessage("Please enter a valid Description");
-
-        RuleFor(e => e.StartDate).Cascade(CascadeMode.Continue)
-            .NotNull()
-            .Must(validateDate)
-            .WithMessage("Please enter a valid Start Date");
-
-        RuleFor(e => e.FinishDate).Cascade(CascadeMode.Continue)
-            .NotNull()
-            .Must(validateDate)
-            .GreaterThan(e => e.StartDate)
-            .WithMessage("Please enter a valid Finish Date");
-
-    }
-
-    public bool validateDate(string date)
-    {
-        DateTime vDate;
-        return DateTime.TryParse(date, out vDate);
-    }
-
 }
