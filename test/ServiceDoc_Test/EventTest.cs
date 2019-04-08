@@ -1,7 +1,6 @@
 using System;
-using Domain.Event;
+using Domain.Events;
 using ExpectedObjects;
-using FluentValidation;
 using FluentValidation.TestHelper;
 using Xunit;
 
@@ -17,13 +16,13 @@ namespace ServiceDoc_Test
 
         public EventTest()
         {
-
             _Name = "Event name Test";
             _Description = "Event description";
             _StartDate = "2019/03/07";
             _FinishDate = "2019/03/07";
             validator = new EventValidator();
         }
+
         [Fact]
         public void Should_have_create_an_event()
         {
@@ -32,8 +31,9 @@ namespace ServiceDoc_Test
             {
                 Name = _Name,
                 Description = _Description,
-                StartDate = _StartDate,
-                FinishDate = _FinishDate
+                StartDate = new DateTime(2019,03,07),
+                FinishDate = new DateTime(2019, 03, 07),
+                Id = 0
 
             };
             
@@ -41,8 +41,8 @@ namespace ServiceDoc_Test
                 .Create()
                 .HasName(EventTest.Name)
                 .HasDescription(EventTest.Description)
-                .HasStartDate(EventTest.StartDate)
-                .HasFinishDate(EventTest.FinishDate)
+                .HasStartDate(_StartDate)
+                .HasFinishDate(_FinishDate)
                 .Builder();
 
             EventTest.ToExpectedObject().ShouldMatch(EventBuilderObject);

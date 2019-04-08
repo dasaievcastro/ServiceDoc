@@ -19,10 +19,12 @@
                         <th>Description</th>
                         <th>Start Date</th>
                         <th>Finish Date</th>
+                        <th>Edit</th>
+                        <th>Remove</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @*@foreach (var item in Model)
+                    @foreach (var item in Model)
                         {
                             <tr>
                                 <td>
@@ -40,10 +42,26 @@
                                 <td>
                                     <a href="/Event/Edit/@item.Id" class="btn">Edit</a>
                                 </td>
+                                <td>
+                                    <a data-id="@item.Id" class="btn btnDelete">Delete</a>
+                                </td>
                             </tr>
-                        }*@
+                        }
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+@section scripts{
+<script>
+    $(document).ready(function () {
+        $(".btnDelete").click(function () {
+            var id = $(this).data("id");
+            if (confirm("Delete this event?")) {
+                window.location.href = "/Event/Delete/" + id;
+
+            }
+        });
+    });
+    </script>
+}

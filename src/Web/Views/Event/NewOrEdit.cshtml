@@ -1,4 +1,4 @@
-﻿@model Domain.Event.EventDto;
+﻿@model Domain.Events.EventDto;
 
 
 <div id="pad-wrapper">
@@ -58,8 +58,14 @@
 </div>
 
 @section Scripts {
-    <script src="/js/jquery.validate.min.js"></script>
-    <script src="/js/jquery.validate.unobtrusive.js"></script>
-    <script src="/js/jquery.unobtrusive-ajax.min.js"></script>
-    <script src="/js/excecaoDeDominio.js"></script>
+    <script src="/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="/lib/jquery-validation-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+    <script>
+    function formErro(erro) { 
+        erro.responseJSON.forEach(function (mensagemDeErro) {
+            toastr.error(mensagemDeErro.errorMessage);
+        });
+    }
+    </script>
 }

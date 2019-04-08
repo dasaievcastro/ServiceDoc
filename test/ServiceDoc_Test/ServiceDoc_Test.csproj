@@ -12,6 +12,8 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
     <PackageReference Include="ExpectedObjects" Version="2.3.4" />
     <PackageReference Include="FluentValidation" Version="8.2.2" />
+    <PackageReference Include="Bogus" Version="26.0.2" />
+    <PackageReference Include="Moq" Version="4.10.1" />
   </ItemGroup>
 
   <ItemGroup>
